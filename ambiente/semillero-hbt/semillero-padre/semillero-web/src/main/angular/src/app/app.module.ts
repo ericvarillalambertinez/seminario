@@ -22,13 +22,17 @@ export { ResultadoDTO } from './semillero/dto/resultado.dto';
 import {EjemploService} from './semillero/services/ejemplo.service';
 import {AbstractService} from './semillero/services/template.service';
 
+//Nombre Participante
+import { NombreParticipanteComponent } from './semillero/componentes/nombreparticipante/nombre-participante-component';
+
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
     BienvenidaComponent,
     CrearPersonaComponent,
-    GestionarComicComponent
+    GestionarComicComponent,
+    NombreParticipanteComponent
   ],
   imports: [
     BrowserModule,
