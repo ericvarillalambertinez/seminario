@@ -3,6 +3,8 @@ package com.hbt.semillero.ejb;
 import javax.ejb.Local;
 
 import java.util.List;
+
+import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 
 
@@ -55,13 +57,9 @@ public interface IGestonarPersonajeLocal {
 	 * @return personaje resultado de la consulta
 	 * @throws Exception si no se recibe idPersonaje
 	 */
-	public PersonajeDTO consultarPersonaje(String idPersonaje);
+	public  List<PersonajeDTO> consultarPersonaje();
+	
+	public List<PersonajeDTO>  consultarPersonajes(Long idComic);
 
-	/**
-	 * 
-	 * Metodo encargado de retornar una lista de personajes
-	 * 
-	 * @return
-	 */
-	public List<PersonajeDTO> consultarPersonajes();
+	
 }

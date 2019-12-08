@@ -1,0 +1,37 @@
+create table rol (
+  rol_id number(10) not null,
+  rol_nombre varchar2(50) constraint UK_NOMBRE unique,
+  rol_estado varchar2(50 char) not null,
+  constraint "rol_estado_CHK" check (rol_estado IN('ACTIVO','INACTIVO')),
+  constraint "PK_rol" PRIMARY KEY (rol_id)
+);
+
+
+comment on column ROL.ROL_NOMBRE is 'Nombre del rol';
+comment on column ROL.ROL_ESTADO  is 'Estado del rol que puede ser 'ACTIVO' o 'INACTIVO ';
+comment on column ROL.ROL_ID  is 'Identificador unico del rol';
+
+
+--Notas a tener en cuenta
+
+--Borrar la estructura de la tabla: drop table "DB_SEMILLERO"."ROL";
+--Ver estructura de la tabla: desc DB_SEMILLERO"."ROL;
+--Consultar los datos de una tabla completa: select * from ROL
+--Consultar solo unos campos en especifico (seleccionar el registro con el id = 1): select * from ROL where SEC_ROL = 1
+--borrar un elemento: delete ROL where SEC_ROL = 3
+--confirmar los cambios: commit
+--devolver los cambios: rollback
+
+--Crear una secuencia para utilizarla como incremento del identificador
+create sequence "SEC_ROL" minvalue 1 start with 1 increment by 2;
+
+
+--Asi obtenemos el siguiente valor: 
+SELECT "DB_SEMILLERO"."SEC_ROL".nextval FROM DUAL;
+--Tambien podemos obtener el valor actual: SELECT "DB_SEMILLERO"."SEC_ROL".CURRVAL FROM DUAL;
+
+--Como insertar datos:
+insert into ROL (rol_id, rol_nombre,rol_estado)
+    VALUES (SEC_ROL.nextval, 'weerr', 'ACTIVO');
+ commit;
+select * from ROL;

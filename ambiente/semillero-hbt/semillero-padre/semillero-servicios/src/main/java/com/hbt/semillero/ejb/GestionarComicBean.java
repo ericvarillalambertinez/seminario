@@ -44,6 +44,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void crearComic(ComicDTO comicNuevo) {
+		
 		// Entidad nueva
 		Comic comic = convertirComicDTOToComic(comicNuevo);
 		// Se almacena la informacion y se maneja la enidad comic
