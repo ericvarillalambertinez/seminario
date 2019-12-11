@@ -1,1 +1,27 @@
 <strong>{{ nombre}} - {{ciudad}}</strong>
+
+<br><br>
+<ul class="list-group">
+
+
+
+    <li class="list-group-item list-group-item-action list-group-item-danger"
+        *ngFor="let comic of Arraycomic, let index= index">
+    {{comic.id}}
+                {{comic.nombre+' '+comic.editorial+' '+comic.tematica+' '+comic.numeroPaginas+' '+comic.precio+' '+comic.autores+' ' +comic.aColor+' '+comic.fechaVenta+' '+comic.estado}}
+              <button [ngStyle]="{'background':'#fff','color':'black'}"(click)="deleteArraycomic(index)">BorrarComic</button>
+            
+    </li>
+
+
+</ul>
+<br>
+<strong>Introducir el ID del comic que desea eliminar</strong><br>
+<input type="text" [(ngModel)]="deleteDato" (keyup.enter)="onkeyup()">
+<br>
+<button  [ngStyle]="{'background':'#fff','color':'black'}"(click)=" deleteIdComic()">Eliminar</button>
+<br>
+<div *ngIf="NombreComicBorrado">
+<strong>Comic {{nombreComic}} eliminado... </strong>
+
+</div>
