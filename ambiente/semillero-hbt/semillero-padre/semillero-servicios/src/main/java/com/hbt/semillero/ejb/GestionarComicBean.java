@@ -29,7 +29,7 @@ import com.hbt.semillero.entidad.Comic;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class GestionarComicBean implements IGestionarComicLocal {
-	
+
 	final static Logger logger = Logger.getLogger(GestionarComicBean.class);
 
 	/**
@@ -44,7 +44,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void crearComic(ComicDTO comicNuevo) {
-		
+
 		// Entidad nueva
 		Comic comic = convertirComicDTOToComic(comicNuevo);
 		// Se almacena la informacion y se maneja la enidad comic
@@ -57,11 +57,11 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo) {
-		Comic comicModificar ;
-		if(comicNuevo==null) {
+		Comic comicModificar;
+		if (comicNuevo == null) {
 			// Entidad a modificar
 			comicModificar = em.find(Comic.class, id);
-		}else {
+		} else {
 			comicModificar = convertirComicDTOToComic(comicNuevo);
 		}
 		comicModificar.setNombre(nombre);
@@ -99,13 +99,40 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<ComicDTO> consultarComics() {
-		
+
 		logger.debug("Se ejecuta el metodo consultar comics");
-		
+
 		List<ComicDTO> resultadosComicDTO = new ArrayList<ComicDTO>();
 		List<Comic> resultados = em.createQuery("select c from Comic c").getResultList();
-		for (Comic comic:resultados) {
+		for (Comic comic : resultados) {
+			logger.debug(comic.getTematicaEnum());
 			resultadosComicDTO.add(convertirComicToComicDTO(comic));
+			logger.debug(resultadosComicDTO);
+		}
+		return resultadosComicDTO;
+	}
+
+	/*
+	 * Metodo que muestra la informacion de comics y por logger 
+	 * muestra el precio total del comics aplicando el iva que para determinar esos datos
+	 * se encuentra en la clase GestionarPresioBean
+	 * */
+	@Override
+	public List<ComicDTO> consultarComicsPrecio() {
+		// TODO Auto-generated method stub
+		logger.debug("Se ejecuta el metodo consultar comics Precio");
+
+		List<ComicDTO> resultadosComicDTO = new ArrayList<ComicDTO>();
+		List<Comic> resultados = em.createQuery("select c from Comic c").getResultList();
+		for (Comic comic : resultados) {
+						
+			GestionarPresioBean precio = new GestionarPresioBean();
+			
+			double precioTotal=precio.CalcularIva(comic.getTematicaEnum().toString(), comic.getPrecio().doubleValue());
+			logger.debug("EL precio Del comic"+comic.getNombre()+" es: "+precioTotal);
+			
+			resultadosComicDTO.add(convertirComicToComicDTO(comic));
+			
 		}
 		return resultadosComicDTO;
 	}
@@ -119,8 +146,8 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	private ComicDTO convertirComicToComicDTO(Comic comic) {
 		ComicDTO comicDTO = new ComicDTO();
-		if(comic.getId()!=null) {
-		 comicDTO.setId(comic.getId().toString());
+		if (comic.getId() != null) {
+			comicDTO.setId(comic.getId().toString());
 		}
 		comicDTO.setNombre(comic.getNombre());
 		comicDTO.setEditorial(comic.getEditorial());
@@ -145,7 +172,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	private Comic convertirComicDTOToComic(ComicDTO comicDTO) {
 		Comic comic = new Comic();
-		if(comicDTO.getId()!=null) {
+		if (comicDTO.getId() != null) {
 			comic.setId(Long.parseLong(comicDTO.getId()));
 		}
 		comic.setNombre(comicDTO.getNombre());
@@ -161,4 +188,5 @@ public class GestionarComicBean implements IGestionarComicLocal {
 		comic.setCantidad(comicDTO.getCantidad());
 		return comic;
 	}
+
 }

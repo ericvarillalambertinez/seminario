@@ -65,6 +65,22 @@ public class GestionarComicRest {
 
 	}
 
+	
+	/**
+	 * 
+	 * Metodo encargado de traer la informacion de un comic determiando
+	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/consultarComicsPrecio
+	 * 
+	 * @param idComic
+	 * @return
+	 */
+	@GET
+	@Path("/consultarComicsPrecio")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ComicDTO> consultarComicsPrecio() {
+		return gestionarComicEJB.consultarComicsPrecio();
+
+	}
 	/**
 	 * 
 	 * Metodo encargado de traer la informacion de un comic determiando

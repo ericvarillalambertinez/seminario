@@ -81,5 +81,29 @@ public class GestionarRolPersonajeRest {
 	public List<RolPersonajeDTO> consultarRolPersonaje() {
 		return gestionarRolPersonajeEJB.consultarRolPersonaje();
 	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
