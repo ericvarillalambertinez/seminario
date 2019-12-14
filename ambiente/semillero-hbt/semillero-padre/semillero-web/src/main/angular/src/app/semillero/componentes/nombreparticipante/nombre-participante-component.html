@@ -1,27 +1,53 @@
 <strong>{{ nombre}} - {{ciudad}}</strong>
 
 <br><br>
-<ul class="list-group">
 
 
 
-    <li class="list-group-item list-group-item-action list-group-item-danger"
-        *ngFor="let comic of Arraycomic, let index= index">
-    {{comic.id}}
-                {{comic.nombre+' '+comic.editorial+' '+comic.tematica+' '+comic.numeroPaginas+' '+comic.precio+' '+comic.autores+' ' +comic.aColor+' '+comic.fechaVenta+' '+comic.estado}}
-              <button [ngStyle]="{'background':'#fff','color':'black'}"(click)="deleteArraycomic(index)">BorrarComic</button>
-            
-    </li>
 
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">EDITORIAL</th>
+            <th scope="col">TEMATICA</th>
+            <th scope="col">NUMERO-PAGINAS</th>
+            <th scope="col">PRECIO</th>
+            <th scope="col">AUTORES</th>
+            <th scope="col">aCOLOR</th>
+            <th scope="col">FECHA-VENTA</th>
+            <th scope="col">ESTADO</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let comic of Arraycomic, let index= index">
+        <tr>
+            <th scope="row">{{comic.id}}</th>
+            <td> {{comic.nombre}}</td>
+            <td> {{comic.editorial}}</td>
+            <td> {{comic.tematica}}</td>
+            <td>{{comic.numeroPaginas}}</td>
+            <td> {{comic.precio}}</td>
+            <td> {{comic.autores}}</td>
+            <td> {{comic.aColor}}</td>
+            <td> {{comic.fechaVenta}}</td>
+            <td> {{comic.estado}}</td>
 
-</ul>
+            <td> <button type="button" class="btn btn-danger" (click)="deleteArraycomic(index)">Eliminar</button></td>
+        </tr>
+
+    </tbody>
+</table>
+
 <br>
 <strong>Introducir el ID del comic que desea eliminar</strong><br>
-<input type="text" [(ngModel)]="deleteDato" (keyup.enter)="onkeyup()">
+<input type="text" [(ngModel)]="deleteDato">
 <br>
-<button  [ngStyle]="{'background':'#fff','color':'black'}"(click)=" deleteIdComic()">Eliminar</button>
+<button type="button" class="btn btn-danger" (click)=" deleteIdComic()">Eliminar</button>
 <br>
-<div *ngIf="NombreComicBorrado">
-<strong>Comic {{nombreComic}} eliminado... </strong>
+<br>
+<div class="alert alert-danger" role="alert" *ngIf="NombreComicBorrado">
+    <strong>Comic {{nombreComic}} eliminado... </strong>
 
 </div>

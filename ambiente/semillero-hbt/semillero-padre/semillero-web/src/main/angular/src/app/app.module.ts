@@ -24,7 +24,7 @@ import {AbstractService} from './semillero/services/template.service';
 
 //Nombre Participante
 import { NombreParticipanteComponent } from './semillero/componentes/nombreparticipante/nombre-participante-component';
-
+import {ConsultarComicComponent} from './semillero/componentes/consultarComic/consultar-comic'
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +32,8 @@ import { NombreParticipanteComponent } from './semillero/componentes/nombreparti
     BienvenidaComponent,
     CrearPersonaComponent,
     GestionarComicComponent,
-    NombreParticipanteComponent
+    NombreParticipanteComponent,
+    ConsultarComicComponent
   ],
   imports: [
     BrowserModule,
