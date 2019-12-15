@@ -9,13 +9,18 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
+import com.hbt.semillero.Exceptions.ComicExceptions;
 import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.dto.ResultadoDTO;
+import com.hbt.semillero.ejb.GestionarComicBean;
 import com.hbt.semillero.ejb.IGestionarComicLocal;
 
 /**
@@ -27,7 +32,7 @@ import com.hbt.semillero.ejb.IGestionarComicLocal;
  */
 @Path("/GestionarComic")
 public class GestionarComicRest {
-
+	final static Logger logger = Logger.getLogger(GestionarComicRest.class);
 	/**
 	 * Atriburo que permite gestionar un comic
 	 */
@@ -61,8 +66,14 @@ public class GestionarComicRest {
 	@Path("/consultarComics")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ComicDTO> consultarComic() {
-		return gestionarComicEJB.consultarComics();
-
+				
+		try {
+			return gestionarComicEJB.consultarComics();
+		} catch (ComicExceptions e) {
+		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+		}
+	return null;
+	
 	}
 
 	
@@ -78,7 +89,16 @@ public class GestionarComicRest {
 	@Path("/consultarComicsPrecio")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ComicDTO> consultarComicsPrecio() {
-		return gestionarComicEJB.consultarComicsPrecio();
+		
+		
+		try {
+			return gestionarComicEJB.consultarComicsPrecio();
+		} catch (ComicExceptions e) {
+		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+		}
+	return null;
+		
+		
 
 	}
 	/**
@@ -92,12 +112,21 @@ public class GestionarComicRest {
 	@GET
 	@Path("/consultarComic")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ComicDTO consultarComic(@QueryParam("idComic") Long idComic) {
-		if (idComic != null) {
-			ComicDTO comicDTO = gestionarComicEJB.consultarComic(idComic.toString());
+	public ComicDTO consultarComic(@QueryParam("idComic") String idComic) {
+		
+		ComicDTO comicDTO=null;
+		
+		
+			try {
+				if (idComic != null) {
+				comicDTO = gestionarComicEJB.consultarComic(idComic);
+				}
+			} catch (ComicExceptions e) {
+			  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			}
 			return comicDTO;
-		}
-		return null;
+	
+		
 	}
 
 	/**
@@ -111,8 +140,16 @@ public class GestionarComicRest {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public ResultadoDTO crearComic(ComicDTO comicDTO) {
-		gestionarComicEJB.crearComic(comicDTO);
+		
+		
 		ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Comic creado exitosamente");
+		try {
+			gestionarComicEJB.crearComic(comicDTO);
+		} catch (ComicExceptions e) {
+		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+		}
+	
+		
 		return resultadoDTO;
 		
 	}
@@ -124,11 +161,20 @@ public class GestionarComicRest {
 	 * @param idComic identificador del comic a buscar
 	 * @param nombre nombre nuevo del comic
 	 */
-	@POST
+	@PUT
 	@Path("/modificar")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void modificarComic(@QueryParam("idComic") Long idComic, @QueryParam("nombre") String nombre) {
-		gestionarComicEJB.modificarComic(idComic, nombre, null);
+		
+		
+		try {
+			gestionarComicEJB.modificarComic(idComic, nombre, null);
+		} catch (ComicExceptions e) {
+		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+		}
+			
+		
+		
 	}
 
 	/**
@@ -141,9 +187,14 @@ public class GestionarComicRest {
 	@Path("/eliminar")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void eliminarComic(@QueryParam("idComic") Long idComic) {
-		if (idComic != null) {
-			ComicDTO comicDTO = gestionarComicEJB.consultarComic(idComic.toString());
-
+		
+		try {
+		
+				gestionarComicEJB.eliminarComic(idComic);
+	
+		} catch (ComicExceptions e) {
+			// TODO: handle exception
+			logger.error("Se ha capturado la excepcion y la informacion es: Codigo: "+e.getCodigo()+" mensaje: "+e.getMensaje());
 		}
 	}
 }

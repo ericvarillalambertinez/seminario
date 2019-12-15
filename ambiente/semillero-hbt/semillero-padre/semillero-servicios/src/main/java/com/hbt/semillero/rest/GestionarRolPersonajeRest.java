@@ -6,11 +6,16 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
+import com.hbt.semillero.Exceptions.ComicExceptions;
+import com.hbt.semillero.Exceptions.RolPersonajeExceptions;
 import com.hbt.semillero.dto.ResultadoDTO;
 import com.hbt.semillero.dto.RolPersonajeDTO;
 import com.hbt.semillero.ejb.IGestionarRolPersonajeLocal;
@@ -25,6 +30,7 @@ import com.hbt.semillero.ejb.IGestionarRolPersonajeLocal;
 @Path("/GestionarRolPersonaje")
 public class GestionarRolPersonajeRest {
 
+	final static Logger logger = Logger.getLogger(GestionarRolPersonajeRest.class);
 	/**
 	 * Atriburo que permite gestionar un RolPersonaje
 	 */
@@ -40,12 +46,14 @@ public class GestionarRolPersonajeRest {
 	 */
 	@POST
 	@Path("/crear")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public ResultadoDTO crearRolPersonaje(RolPersonajeDTO rolNuevo) {
-		gestionarRolPersonajeEJB.crearRolPersonaje(rolNuevo);
-		ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "ROlPersonaje creado exitosamente");
-		return resultadoDTO;
+	public void crearRolPersonaje(RolPersonajeDTO rolNuevo) {
+		try {
+			gestionarRolPersonajeEJB.crearRolPersonaje(rolNuevo);
+		} catch (RolPersonajeExceptions e) {
+			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
+					+ e.getMensaje());
+		}
+
 	};
 
 	/**
@@ -60,11 +68,18 @@ public class GestionarRolPersonajeRest {
 	@Path("/consultarRolPersonajeId")
 	@Produces(MediaType.APPLICATION_JSON)
 	public RolPersonajeDTO consultarRolPersonaje(@QueryParam("idRol") Long idRol) {
-		if (idRol != null) {
-			RolPersonajeDTO rolpersonajeDTO = (RolPersonajeDTO) gestionarRolPersonajeEJB.consultarRolPersonaje(idRol.toString());
-			return rolpersonajeDTO;
+		RolPersonajeDTO rolpersonajeDTO = null;
+		try {
+			if (idRol != null) {
+
+				rolpersonajeDTO = (RolPersonajeDTO) gestionarRolPersonajeEJB.consultarRolPersonaje(idRol.toString());
+			}
+		} catch (RolPersonajeExceptions e) {
+			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
+					+ e.getMensaje());
 		}
-		return null;
+
+		return rolpersonajeDTO;
 	};
 
 	/**
@@ -79,31 +94,56 @@ public class GestionarRolPersonajeRest {
 	@Path("/consultarRolPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<RolPersonajeDTO> consultarRolPersonaje() {
-		return gestionarRolPersonajeEJB.consultarRolPersonaje();
+		try {
+			return gestionarRolPersonajeEJB.consultarRolPersonaje();
+		} catch (RolPersonajeExceptions e) {
+			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
+					+ e.getMensaje());
+		}
+		return null;
 	};
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
+	/**
+	 * 
+	 * Metodo encargado de modificar el nombre de un rol
+	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/modificar?idRol=1&nombre=nuevonombre
+	 * @param idComic identificador del comic a buscar
+	 * @param nombre nombre nuevo del comic
+	 */
+	@PUT
+	@Path("/modificar")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void modificarRolPersonaje(@QueryParam("idRol") Long idRol, @QueryParam("nombre") String nombre) {
+		
+		
+		try {
+			gestionarRolPersonajeEJB.modificarRolPersonaje(idRol, nombre,null);
+		} catch (RolPersonajeExceptions e) {
+		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+		}
+			
+		
+		
+	}
+
+	/**
+	 * 
+	 * Metodo encargado de eliminar un rol dado el id
+	 * 
+	 * @param idRol identificador del rol
+	 */
+	@POST
+	@Path("/eliminar")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void eliminarRolPersonaje(@QueryParam("idRol") Long idRol) {
+		
+		try {
+		
+			gestionarRolPersonajeEJB.eliminarRolPersonaje(idRol);
+	
+		} catch (RolPersonajeExceptions e) {
+			// TODO: handle exception
+			logger.error("Se ha capturado la excepcion y la informacion es: Codigo: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+		}
+	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import com.hbt.semillero.Exceptions.ComicExceptions;
 import com.hbt.semillero.dto.ComicDTO;
 
 /**
@@ -26,7 +27,7 @@ public interface IGestionarComicLocal {
 	 * 
 	 * @param comicNuevo informacion nueva a crear
 	 */
-	public void crearComic(ComicDTO comicNuevo);
+	public void crearComic(ComicDTO comicNuevo) throws ComicExceptions ;
 
 	/**
 	 * 
@@ -36,7 +37,7 @@ public interface IGestionarComicLocal {
 	 * 
 	 * @param comicModificar informacion nueva a modificar
 	 */
-	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo);
+	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo) throws ComicExceptions;
 
 	/**
 	 * 
@@ -46,7 +47,7 @@ public interface IGestionarComicLocal {
 	 * 
 	 * @param comicEliminar informacion a eliminar
 	 */
-	public void eliminarComic(Long idComic);
+	public void eliminarComic(Long idComic) throws ComicExceptions;
 
 	/**
 	 * 
@@ -56,7 +57,7 @@ public interface IGestionarComicLocal {
 	 * @return comic Resultado de la consulta
 	 * @throws Exception si no se recibe idComic
 	 */
-	public ComicDTO consultarComic(String idComic);
+	public ComicDTO consultarComic(String idComic) throws ComicExceptions;
 
 	/**
 	 * 
@@ -64,7 +65,7 @@ public interface IGestionarComicLocal {
 	 * 
 	 * @return
 	 */
-	public List<ComicDTO> consultarComics();
+	public List<ComicDTO> consultarComics() throws ComicExceptions;
 	
-	public List<ComicDTO> consultarComicsPrecio();
+	public List<ComicDTO> consultarComicsPrecio() throws ComicExceptions ;
 }

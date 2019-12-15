@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import com.hbt.semillero.Exceptions.RolPersonajeExceptions;
 import com.hbt.semillero.dto.RolPersonajeDTO;
 
 /**
@@ -26,7 +27,7 @@ public interface IGestionarRolPersonajeLocal {
 	 * 
 	 * @param comicNuevo informacion nueva a crear
 	 */
-	public void crearRolPersonaje(RolPersonajeDTO rolNuevo);
+	public void crearRolPersonaje(RolPersonajeDTO rolNuevo) throws RolPersonajeExceptions;
 
 	/**
 	 * 
@@ -36,7 +37,7 @@ public interface IGestionarRolPersonajeLocal {
 	 * 
 	 * @param comicModificar informacion nueva a modificar
 	 */
-	public void modificarRolPersonaje(Long id, String nombre, RolPersonajeDTO rolNuevo);
+	public void modificarRolPersonaje(Long id, String nombre, RolPersonajeDTO rolNuevo) throws RolPersonajeExceptions;
 
 	/**
 	 * 
@@ -46,7 +47,7 @@ public interface IGestionarRolPersonajeLocal {
 	 * 
 	 * @param comicEliminar informacion a eliminar
 	 */
-	public void eliminarRolPersonaje(Long idRol);
+	public void eliminarRolPersonaje(Long idRol) throws RolPersonajeExceptions;
 
 	/**
 	 * 
@@ -56,7 +57,7 @@ public interface IGestionarRolPersonajeLocal {
 	 * @return comic Resultado de la consulta
 	 * @throws Exception si no se recibe idComic
 	 */
-	public RolPersonajeDTO consultarRolPersonaje(String idRol);
+	public RolPersonajeDTO consultarRolPersonaje(String idRol) throws RolPersonajeExceptions;
 
 	/**
 	 * 
@@ -64,6 +65,6 @@ public interface IGestionarRolPersonajeLocal {
 	 * 
 	 * @return
 	 */
-	public List<RolPersonajeDTO> consultarRolPersonaje();
+	public List<RolPersonajeDTO> consultarRolPersonaje() throws RolPersonajeExceptions;
 
 }
