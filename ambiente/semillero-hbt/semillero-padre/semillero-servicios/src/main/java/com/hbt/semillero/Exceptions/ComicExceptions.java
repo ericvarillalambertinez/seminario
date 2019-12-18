@@ -18,6 +18,12 @@ public class ComicExceptions extends Exception {
 
 	}
 
+	public ComicExceptions(String codigo, String mensaje) {
+		super();
+		this.codigo = codigo;
+		this.mensaje = mensaje;
+	}
+
 	public String getCodigo() {
 		return codigo;
 	}

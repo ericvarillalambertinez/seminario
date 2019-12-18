@@ -11,6 +11,12 @@ public class PersonajeExceptions extends Exception {
 		this.mensaje = mensaje;
 	}
 
+	public PersonajeExceptions(String string, String string2) {
+		super();
+		this.codigo = codigo;
+		this.mensaje = mensaje;
+	}
+
 	public String getCodigo() {
 		return codigo;
 	}

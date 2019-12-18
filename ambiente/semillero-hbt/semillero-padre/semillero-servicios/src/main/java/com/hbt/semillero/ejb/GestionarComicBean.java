@@ -42,7 +42,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	private EntityManager em;
 
 	/**
-	 * 
+	 * Metodo para crear un Comic 
 	 * @throws ComicExceptions
 	 * @see com.hbt.semillero.ejb.IGestionarComicLocal#crearComic(com.hbt.semillero.dto.ComicDTO)
 	 */
@@ -50,51 +50,48 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	public void crearComic(ComicDTO comicNuevo) throws ComicExceptions {
 
 		try {
+			logger.debug("Inicio del crear comic");
+			logger.info("Informacion del comic "+comicNuevo);
 			// Entidad nueva
 			Comic comic = convertirComicDTOToComic(comicNuevo);
 			// Se almacena la informacion y se maneja la enidad comic
 			em.persist(comic);
-
+			logger.debug("Finaliza el metodo crear personaje");
 		} catch (Exception e) {
-			logger.error("Ocurrio un error creando el comic" + comicNuevo);
+			logger.error("Ocurrio un error creando el comic " + comicNuevo);
 			throw new ComicExceptions("COD-0001", "Error al ejecutar el metodo crearComic ", e);
 		}
 	}
 
 	/**
-	 * 
+	 * Metodo para modificar un Comic 
 	 * @throws ComicExceptions
 	 * @see com.hbt.semillero.ejb.IGestionarComicLocal#modificarComic(com.hbt.semillero.dto.ComicDTO)
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo) throws ComicExceptions {
-
-		Comic comicModificar;
-		try {
-			if (comicNuevo == null) {
-				// Entidad a modificar
-				// comicModificar = em.find(Comic.class, id);
-				comicModificar = (Comic) em.createQuery("SELECT c FROM Comic c WHERE c.id = :id").setParameter("id", id)
-						.getResultList();
-				// query.executeUpdate();
-
-			} else {
-				comicModificar = convertirComicDTOToComic(comicNuevo);
-			}
-			comicModificar.setNombre(nombre);
-
-			Query query = em.createQuery("UPDATE Comic c SET c.nombre=:comicModificar WHERE c.id=:id")
-					.setParameter("id", id).setParameter("comicModificar", comicModificar.getNombre());
-			query.executeUpdate();
-
-		} catch (Exception e) {
-			logger.error("Ocurrio un error modificadno el comic" + comicNuevo);
-			throw new ComicExceptions("COD-0002", "Error al ejecutar el metodo modificarComic ", e);
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//	public ComicDTO modificarComic( ComicDTO comicNuevo) throws ComicExceptions {
+	public void modificarComic( String nombre, Long id,ComicDTO comicNuevo) throws ComicExceptions {
+         logger.debug(id);
+		if(id== null) {
+			throw new ComicExceptions("COD-0015","El identificador del comic es requerido");
 		}
+		
+		Query query = em.createQuery("UPDATE Comic c "
+		+"SET c.nombre = :nombre "
+	    + "WHERE c.id = :idComic");
+		
+		query.setParameter("nombre", nombre);
+		query.setParameter("idComic", id);
+		query.executeUpdate();
+		logger.debug("comic a modificare...."+nombre);
+		
+		
+	//	return convertirComicToComicDTO(em.find(Comic.class, comicNuevo.getId()));
+	
 	}
 
 	/**
-	 * 
+	 * Metodo para eliminar un Comic 
 	 * @throws ComicExceptions
 	 * @see com.hbt.semillero.ejb.IGestionarComicLocal#eliminarComic(java.lang.Long)
 	 */
@@ -121,7 +118,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	}
 
 	/**
-	 * 
+	 * Metodo para consultar un Comic por id 
 	 * @throws ComicExceptions
 	 * @see com.hbt.semillero.ejb.IGestionarComicLocal#consultarComic(java.lang.String)
 	 */
@@ -135,7 +132,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 			Long idComic = Long.parseLong(idComi);
 			Query query = em.createQuery("SELECT c FROM Comic c WHERE c.id = :idComic").setParameter("idComic",
 					idComic);
-			comic = (Comic) query.getResultList();
+			comic = (Comic) query.getSingleResult();
 			// comic = em.find(Comic.class, Long.parseLong(idComic));
 			ComicDTO comicDTO = convertirComicToComicDTO(comic);
 			return comicDTO;
@@ -149,16 +146,18 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	}
 
 	/**
-	 * 
+	 * Metodo para listar todos los Comic 
 	 * @throws ComicExceptions
 	 * @see com.hbt.semillero.ejb.IGestionarComicLocal#consultarComics()
 	 */
+	@SuppressWarnings("unchecked")
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<ComicDTO> consultarComics() throws ComicExceptions {
 
 		logger.debug("Se ejecuta el metodo consultar comics");
 		List<ComicDTO> resultadosComicDTO = new ArrayList<ComicDTO>();
 		try {
+			
 			List<Comic> resultados = em.createQuery("select c from Comic c").getResultList();
 			for (Comic comic : resultados) {
 				// logger.debug(comic.getTematicaEnum());
@@ -178,7 +177,8 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 * total del comics aplicando el iva que para determinar esos datos se encuentra
 	 * en la clase GestionarPresioBean
 	 */
-	@Override
+	@SuppressWarnings("unchecked")
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public List<ComicDTO> consultarComicsPrecio() throws ComicExceptions {
 		// TODO Auto-generated method stub
 		logger.debug("Se ejecuta el metodo consultar comics Precio");
@@ -213,6 +213,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	private ComicDTO convertirComicToComicDTO(Comic comic) {
 		ComicDTO comicDTO = new ComicDTO();
+	
 		if (comic.getId() != null) {
 			comicDTO.setId(comic.getId().toString());
 		}

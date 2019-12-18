@@ -21,7 +21,7 @@ public interface IGestionarRolPersonajeLocal {
 
 	/**
 	 * 
-	 * Metodo encargado de crear un comic y persistirlo
+	 * Metodo encargado de crear un Rol y persistirlo
 	 * 
 	 * @author Eric Varilla
 	 * 
@@ -31,37 +31,37 @@ public interface IGestionarRolPersonajeLocal {
 
 	/**
 	 * 
-	 * Metodo encargado de consultar un comic modificarlo y guardarlo
+	 * Metodo encargado de consultar un Rol modificarlo y guardarlo
 	 * 
 	 * @author Eric Varilla
 	 * 
-	 * @param comicModificar informacion nueva a modificar
+	 * @param modificarRolPersonaje informacion nueva a modificar
 	 */
-	public void modificarRolPersonaje(Long id, String nombre, RolPersonajeDTO rolNuevo) throws RolPersonajeExceptions;
+	public RolPersonajeDTO modificarRolPersonaje(RolPersonajeDTO rolNuevo) throws RolPersonajeExceptions;
 
 	/**
 	 * 
-	 * Metodo encargado de eliminar un comic modificarlo y guardarlo
+	 * Metodo encargado de eliminar un Rol 
 	 * 
 	 * @author Eric Varilla
 	 * 
-	 * @param comicEliminar informacion a eliminar
+	 * @param idRol informacion a eliminar
 	 */
 	public void eliminarRolPersonaje(Long idRol) throws RolPersonajeExceptions;
 
 	/**
 	 * 
-	 * Metodo encargado de retornar la informacion de un comic
+	 * Metodo encargado de retornar la informacion de un Rol
 	 * 
-	 * @param idComic identificador del comic a ser consultado
-	 * @return comic Resultado de la consulta
-	 * @throws Exception si no se recibe idComic
+	 * @param idRol identificador del Rol a ser consultado
+	 * @return rol Resultado de la consulta
+	 * @throws Exception si no se recibe idRol
 	 */
 	public RolPersonajeDTO consultarRolPersonaje(String idRol) throws RolPersonajeExceptions;
 
 	/**
 	 * 
-	 * Metodo encargado de retornar una lista de comics
+	 * Metodo encargado de retornar una lista de Rol
 	 * 
 	 * @return
 	 */

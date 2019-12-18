@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -14,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -56,51 +58,53 @@ public class GestionarComicRest {
 
 	/**
 	 * 
-	 * Metodo encargado de traer la informacion de un comic determiando
+	 * Metodo encargado de traer la informacion de los comic
 	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/consultarComics
-	 * 
-	 * @param idComic
+	 *
 	 * @return
 	 */
 	@GET
 	@Path("/consultarComics")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ComicDTO> consultarComic() {
-				
+	public Response consultarComic() {
+		List<ComicDTO> comicDTO = null;
 		try {
-			return gestionarComicEJB.consultarComics();
+			comicDTO = gestionarComicEJB.consultarComics();
+			//ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Listado todos los Comic exitosamente");
+			return Response.status(Response.Status.CREATED).entity(comicDTO).build();	
 		} catch (ComicExceptions e) {
-		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity("Ocurrio un error al Listar los comic.." + e)
+					.build();
 		}
-	return null;
-	
+
 	}
 
-	
 	/**
 	 * 
-	 * Metodo encargado de traer la informacion de un comic determiando
+	 * Metodo encargado de traer la informacion de los precios de un comic
 	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/consultarComicsPrecio
-	 * 
-	 * @param idComic
+	 *
 	 * @return
 	 */
 	@GET
 	@Path("/consultarComicsPrecio")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ComicDTO> consultarComicsPrecio() {
-		
-		
+	public Response consultarComicsPrecio() {
+		List<ComicDTO> comicDTO = null;
 		try {
-			return gestionarComicEJB.consultarComicsPrecio();
+			comicDTO = gestionarComicEJB.consultarComicsPrecio();
+			//ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Listado todos los Comic exitosamente");
+			return Response.status(Response.Status.CREATED).entity(comicDTO).build();	
+			
 		} catch (ComicExceptions e) {
-		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity("Ocurrio un error al Listar los precios de los comic.." + e)
+					.build();
 		}
-	return null;
-		
-		
 
 	}
+
 	/**
 	 * 
 	 * Metodo encargado de traer la informacion de un comic determiando
@@ -112,89 +116,92 @@ public class GestionarComicRest {
 	@GET
 	@Path("/consultarComic")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ComicDTO consultarComic(@QueryParam("idComic") String idComic) {
-		
-		ComicDTO comicDTO=null;
-		
-		
-			try {
-				if (idComic != null) {
+	public Response consultarComic(@QueryParam("idComic") String idComic) {
+
+		ComicDTO comicDTO = null;
+		try {
+			if (idComic != null) {
 				comicDTO = gestionarComicEJB.consultarComic(idComic);
-				}
-			} catch (ComicExceptions e) {
-			  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
 			}
-			return comicDTO;
-	
-		
+			return Response.status(Response.Status.OK).entity(comicDTO).build();
+		} catch (ComicExceptions e) {
+			logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity("Ocurrio un error al crear el comic.." + e)
+					.build();
+		}
+
 	}
 
 	/**
-	 * Crea las personas en sus diferentes roles dentro del sistema.
-	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/crear
-	 * @param persona
+	 * Crea los comic en el sistema
+	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/crearComic
+	 * 
+	 * @param comic
 	 * @return
 	 */
 	@POST
-	@Path("/crear")
+	@Path("/crearComic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public ResultadoDTO crearComic(ComicDTO comicDTO) {
-		
-		
-		ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Comic creado exitosamente");
+	public Response crearComic(ComicDTO comicDTO) {
 		try {
 			gestionarComicEJB.crearComic(comicDTO);
+			ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Comic creado exitosamente...");
+			return Response.status(Response.Status.CREATED).entity(resultadoDTO).build();
 		} catch (ComicExceptions e) {
-		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity("Ocurrio un error al crear el comic.." + e)
+					.build();
 		}
-	
-		
-		return resultadoDTO;
-		
+
 	}
 
 	/**
 	 * 
 	 * Metodo encargado de modificar el nombre de un comic
-	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/modificar?idComic=1&nombre=nuevonombre
+	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/modificarComic?idComic=1&nombre=nuevonombre
+	 * 
 	 * @param idComic identificador del comic a buscar
-	 * @param nombre nombre nuevo del comic
+	 * @param nombre  nombre nuevo del comic
 	 */
-	@PUT
-	@Path("/modificar")
+	@POST
+	@Path("/modificarComic")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void modificarComic(@QueryParam("idComic") Long idComic, @QueryParam("nombre") String nombre) {
-		
-		
+	public Response modificarComic(@QueryParam("nombre") String nombre, @QueryParam("id") Long id) {
+
 		try {
-			gestionarComicEJB.modificarComic(idComic, nombre, null);
+			gestionarComicEJB.modificarComic(nombre, id, null);
+			return Response.status(Response.Status.OK).entity("Comic modificado.....").build();
 		} catch (ComicExceptions e) {
-		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
-			
-		
-		
+
 	}
 
 	/**
 	 * 
 	 * Metodo encargado de eliminar un comic dado el id
-	 * 
+	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/eliminarComic?idComic=1
 	 * @param idComic identificador del comic
 	 */
 	@POST
-	@Path("/eliminar")
+	@Path("/eliminarComic")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void eliminarComic(@QueryParam("idComic") Long idComic) {
-		
+	public Response eliminarComic(@QueryParam("idComic") Long idComic) {
+
 		try {
-		
-				gestionarComicEJB.eliminarComic(idComic);
-	
+			gestionarComicEJB.eliminarComic(idComic);
+
+			return Response.status(Response.Status.OK).entity("Comic Eliminado").build();
+
 		} catch (ComicExceptions e) {
-			// TODO: handle exception
-			logger.error("Se ha capturado la excepcion y la informacion es: Codigo: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			logger.error("Se ha capturado la excepcion y la informacion es: Codigo: " + e.getCodigo() + " mensaje: "
+					+ e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity("Ocurrio un error al Eliminar el comic.." + e)
+					.build();
 		}
 	}
+
 }

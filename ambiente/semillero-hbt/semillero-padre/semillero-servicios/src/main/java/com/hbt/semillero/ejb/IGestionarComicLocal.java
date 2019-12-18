@@ -27,7 +27,7 @@ public interface IGestionarComicLocal {
 	 * 
 	 * @param comicNuevo informacion nueva a crear
 	 */
-	public void crearComic(ComicDTO comicNuevo) throws ComicExceptions ;
+	public void crearComic(ComicDTO comicNuevo) throws ComicExceptions;
 
 	/**
 	 * 
@@ -37,7 +37,7 @@ public interface IGestionarComicLocal {
 	 * 
 	 * @param comicModificar informacion nueva a modificar
 	 */
-	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo) throws ComicExceptions;
+	public void modificarComic(String nombre, Long id, ComicDTO comicNuevo) throws ComicExceptions;
 
 	/**
 	 * 

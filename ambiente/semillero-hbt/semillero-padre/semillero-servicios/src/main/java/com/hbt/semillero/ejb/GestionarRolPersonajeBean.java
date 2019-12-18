@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 
 import com.hbt.semillero.Exceptions.ComicExceptions;
+import com.hbt.semillero.Exceptions.PersonajeExceptions;
 import com.hbt.semillero.Exceptions.RolPersonajeExceptions;
 import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
@@ -43,8 +44,9 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal {
 	private EntityManager EntityManager;
 
 	/**
+	 * Metodo para crear un ROl
 	 * 
-	 * @throws RolPersonajeExceptions 
+	 * @throws RolPersonajeExceptions
 	 * @see com.hbt.semillero.ejb.IGestionarRolPersonajeLocal#crearRolPersonaje(com.hbt.semillero.dto.RolPersonajeDTO)
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -62,49 +64,52 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal {
 			logger.error("Ocurrio un error creando el comic" + rolNuevo);
 			throw new RolPersonajeExceptions("COD-0014", "Error al ejecutar el metodo crearComic ", e);
 		}
-		
-		
-		
-	
+
 		logger.debug("Aqui finaliza el metodo crearRolPersonaje");
 	}
 
+	/**
+	 * Metodo para modificar un Rol
+	 * 
+	 * @throws RolPersonajeExceptions
+	 * 
+	 * @see com.hbt.semillero.ejb.IGestionarRolPersonajeLocal#crearRolPersonaje(com.hbt.
+	 *      semillero.dto.RolPersonajeDTO)
+	 */
 	@Override
-	public void modificarRolPersonaje(Long id, String nombre, RolPersonajeDTO rolNuevo) throws RolPersonajeExceptions {
+	public RolPersonajeDTO modificarRolPersonaje(RolPersonajeDTO rolNuevo) throws RolPersonajeExceptions {
 		logger.debug("Se ejecuta el metodo modificarRolPersonaje");
-		RolPersonaje rolModificar;
+
 		try {
-			if (rolNuevo == null) {
-				// Entidad a modificar
-				
-				rolModificar = (RolPersonaje) EntityManager.createQuery("SELECT r FROM RolPersonaje r WHERE r.id = :id").setParameter("id", id)
-						.getResultList();
-				// query.executeUpdate();
-
-			} else {
-				rolModificar = convertirRolPersonajeDTOToRolPersonaje(rolNuevo);
-			}
-			rolModificar.setNombre(nombre);
-
-			Query query = EntityManager.createQuery("UPDATE RolPersonaje r SET r.nombre=:rolModificar WHERE r.id=:id")
-					.setParameter("id", id).setParameter("comicModificar", rolModificar.getNombre());
+			logger.info("Informacion del Rol a modificar: " + rolNuevo);
+			Query query = EntityManager
+					.createQuery("UPDATE RolPersonaje r " + "SET  r.nombre = :nombre, " + "r.estado = :estado "
+							+ "WHERE r.id=:id")
+					.setParameter("nombre", rolNuevo.getNombre()).setParameter("estado", rolNuevo.getEstado())
+					.setParameter("id", rolNuevo.getId());
 			query.executeUpdate();
+			logger.debug("Finalizo el metodo modificarRolPersonaje");
+			return convertirRolPersonajeToRolPersonajeDTO(EntityManager.find(RolPersonaje.class, rolNuevo.getId()));
 
 		} catch (Exception e) {
 			logger.error("Ocurrio un error modificadno el modificarRolPersonaje" + rolNuevo);
 			throw new RolPersonajeExceptions("COD-0015", "Error al ejecutar el metodo modificarRolPersonaje ", e);
 		}
 
-		logger.debug("Finalizo el metodo modificarRolPersonaje");
 	}
 
+	/**
+	 * Metodo para eliminar un rol
+	 * 
+	 * @param idRol
+	 */
 	@Override
 	public void eliminarRolPersonaje(Long idRol) throws RolPersonajeExceptions {
 		logger.debug("Se ejecuta el metodo eliminarRolPersonaje");
 		try {
-			
-			
-			Query query = EntityManager.createQuery("DELETE FROM RolPersonaje r WHERE r.id = :idRol").setParameter("idRol", idRol);
+
+			Query query = EntityManager.createQuery("DELETE FROM RolPersonaje r WHERE r.id = :idRol")
+					.setParameter("idRol", idRol);
 			query.executeUpdate();
 
 		} catch (Exception e) {
@@ -116,37 +121,53 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal {
 
 	}
 
-	@Override
-	public  RolPersonajeDTO consultarRolPersonaje(String idRol) throws RolPersonajeExceptions {
+	/**
+	 * Metodo para consultar un rol por id
+	 * 
+	 * @param idRol
+	 */
+	@SuppressWarnings("unchecked")
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public RolPersonajeDTO consultarRolPersonaje(String id) throws RolPersonajeExceptions {
 		logger.debug("Se ejecuta el metodo consultar RolPersonajes");
+	
+			try {
+
+				RolPersonaje rol = null;
+				rol = new RolPersonaje();
+				Long idrol = Long.parseLong(id);
+				Query query = EntityManager.createQuery("SELECT r FROM RolPersonaje r WHERE r.id = :idrol").setParameter("idrol",
+						idrol);
+				rol = (RolPersonaje) query.getSingleResult();
+			
+				RolPersonajeDTO rolDTO = convertirRolPersonajeToRolPersonajeDTO(rol);
+				return rolDTO;
+			} catch (NumberFormatException e) {
+				logger.error("Error convirtiendo la cadena a numero: " + id);
+				throw new RolPersonajeExceptions("COD-0017", "no se pudo convertir la cedena", e);
+			} catch (Exception e) {
+				logger.error("Error al ejecutar el metodo consultarRolPersonaje " + id);
+				throw new RolPersonajeExceptions("COD-0018", "no se pudo ejecutar el metodo consultarRolPersonaje ", e);
+			}
 		
-		try {
-			RolPersonaje rolpersonaje = null;
-			rolpersonaje = new RolPersonaje();
-			rolpersonaje = EntityManager.find(RolPersonaje.class, Long.parseLong(idRol));
-			RolPersonajeDTO rolpersonajeDTO = convertirRolPersonajeToRolPersonajeDTO(rolpersonaje);
-			logger.debug("Aqui finaliza el metodo EliminarPersonaje");
-			return rolpersonajeDTO;
-		} catch (NumberFormatException e) {
-			logger.error("Error convirtiendo la cadena a numero: " + idRol);
-			throw new RolPersonajeExceptions("COD-0017", "no se pudo convertir la cedena", e);
-		} catch (Exception e) {
-			logger.error("Error al ejecutar el metodo consultarRolPersonaje " + idRol);
-			throw new RolPersonajeExceptions("COD-0018", "no se pudo ejecutar el metodo consultarRolPersonaje ", e);
-		}
 	
 	}
 
+	
+	/**
+	 * Metodo para consultar todos los Rol
+	 * 
+	 * **/
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RolPersonajeDTO> consultarRolPersonaje() throws RolPersonajeExceptions {
 		logger.debug("Se ejecuta el metodo consultar RolPersonajes");
-	
+
 		List<RolPersonajeDTO> resultadosrolpersonajeDTO = new ArrayList<RolPersonajeDTO>();
 		try {
 
 			List<RolPersonaje> resultados = EntityManager.createQuery("select r from RolPersonaje r").getResultList();
-			for (RolPersonaje rolpersonaje:resultados) {
+			for (RolPersonaje rolpersonaje : resultados) {
 				resultadosrolpersonajeDTO.add(convertirRolPersonajeToRolPersonajeDTO(rolpersonaje));
 			}
 			logger.debug("Finaliza el metodo consultar RolPersonajes");
@@ -154,15 +175,15 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal {
 			logger.error("Error al consultar los el rol... " + e);
 			throw new RolPersonajeExceptions("COD-0019", "Error al ejecutar el metodo consultarRolPersonaje", e);
 		}
-		
+
 		return resultadosrolpersonajeDTO;
 	}
 
 	/**
 	 * 
-	 * Metodo encargado de transformar un comic a un comicDTO
+	 * Metodo encargado de transformar un RolPerosnaje a un RolPerosnajeDTO
 	 * 
-	 * @param comic
+	 * @param RolPerosnaje
 	 * @return
 	 */
 	private RolPersonajeDTO convertirRolPersonajeToRolPersonajeDTO(RolPersonaje rolpersonaje) {
@@ -176,9 +197,9 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal {
 
 	/**
 	 * 
-	 * Metodo encargado de transformar un comicDTO a un comic
+	 * Metodo encargado de transformar un RolPerosnajeDTO a un RolPerosnaje
 	 * 
-	 * @param comic
+	 * @param RolPersonajeDTO
 	 * @return
 	 */
 	private RolPersonaje convertirRolPersonajeDTOToRolPersonaje(RolPersonajeDTO rolpersonajeDTO) {

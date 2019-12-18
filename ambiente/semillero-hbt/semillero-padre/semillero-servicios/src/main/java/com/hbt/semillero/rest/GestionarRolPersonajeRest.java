@@ -3,7 +3,9 @@ package com.hbt.semillero.rest;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.persistence.Entity;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -11,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -39,19 +42,22 @@ public class GestionarRolPersonajeRest {
 
 	/**
 	 * Crea las personas en sus diferentes roles dentro del sistema.
-	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/crear
+	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/crearRolPersonaje
 	 * 
 	 * @param persona
 	 * @return
 	 */
 	@POST
-	@Path("/crear")
-	public void crearRolPersonaje(RolPersonajeDTO rolNuevo) {
+	@Path("/crearRolPersonaje")
+	public Response crearRolPersonaje(RolPersonajeDTO rolNuevo) {
+
 		try {
 			gestionarRolPersonajeEJB.crearRolPersonaje(rolNuevo);
+			return Response.status(Response.Status.CREATED).entity("Rol Creado exitosamente..").build();
 		} catch (RolPersonajeExceptions e) {
 			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
 					+ e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
 
 	};
@@ -67,83 +73,89 @@ public class GestionarRolPersonajeRest {
 	@GET
 	@Path("/consultarRolPersonajeId")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RolPersonajeDTO consultarRolPersonaje(@QueryParam("idRol") Long idRol) {
-		RolPersonajeDTO rolpersonajeDTO = null;
+	public Response consultarRolPersonaje(@QueryParam("idRol") String idRol) {
+		RolPersonajeDTO rol = null;
 		try {
-			if (idRol != null) {
-
-				rolpersonajeDTO = (RolPersonajeDTO) gestionarRolPersonajeEJB.consultarRolPersonaje(idRol.toString());
-			}
+			
+				rol = gestionarRolPersonajeEJB.consultarRolPersonaje(idRol);
+			
+					return Response.status(Response.Status.OK).entity(rol).build();
+				
+			
 		} catch (RolPersonajeExceptions e) {
 			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
 					+ e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
 
-		return rolpersonajeDTO;
 	};
 
 	/**
 	 * 
-	 * Metodo encargado de traer la informacion de un rol determiando
+	 * Metodo encargado de traer la informacion de todos los rol
 	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/consultarRolPersonaje
 	 * 
-	 * @param idComic
 	 * @return
 	 */
 	@GET
 	@Path("/consultarRolPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<RolPersonajeDTO> consultarRolPersonaje() {
+	public Response consultarRolPersonaje() {
+		List<RolPersonajeDTO> rol = null;
 		try {
-			return gestionarRolPersonajeEJB.consultarRolPersonaje();
+			rol = gestionarRolPersonajeEJB.consultarRolPersonaje();
+			return Response.status(Response.Status.OK).entity(rol).build();
 		} catch (RolPersonajeExceptions e) {
 			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
 					+ e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
-		return null;
+
 	};
 
 	/**
 	 * 
-	 * Metodo encargado de modificar el nombre de un rol
-	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/modificar?idRol=1&nombre=nuevonombre
-	 * @param idComic identificador del comic a buscar
-	 * @param nombre nombre nuevo del comic
+	 * Metodo encargado de modificar un rol
+	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/modificarRolPersonaje
+	 * 
+	 * @param rolpersonajeDTO, que contendra toda la informacion del rol a modificar
 	 */
-	@PUT
-	@Path("/modificar")
+	@POST
+	@Path("/modificarRolPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void modificarRolPersonaje(@QueryParam("idRol") Long idRol, @QueryParam("nombre") String nombre) {
-		
-		
+	public Response modificarRolPersonaje(RolPersonajeDTO rolpersonajeDTO) {
+
 		try {
-			gestionarRolPersonajeEJB.modificarRolPersonaje(idRol, nombre,null);
+			gestionarRolPersonajeEJB.modificarRolPersonaje(rolpersonajeDTO);
+			return Response.status(Response.Status.OK).entity("Rol Modificado exitosamente..").build();
 		} catch (RolPersonajeExceptions e) {
-		  logger.error("Se capturo la excepcion y la informacion del codigo es: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			logger.error("Se capturo la excepcion y la informacion del codigo es: " + e.getCodigo() + " mensaje: "
+					+ e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
-			
-		
-		
+
 	}
 
 	/**
 	 * 
 	 * Metodo encargado de eliminar un rol dado el id
+	 * http://localhost:8085/semillero-servicios/rest/GestionarRolPersonaje/eliminarRolPersonaje
 	 * 
 	 * @param idRol identificador del rol
 	 */
 	@POST
-	@Path("/eliminar")
+	@Path("/eliminarRolPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void eliminarRolPersonaje(@QueryParam("idRol") Long idRol) {
-		
+	public Response eliminarRolPersonaje(@QueryParam("idRol") Long idRol) {
+
 		try {
-		
 			gestionarRolPersonajeEJB.eliminarRolPersonaje(idRol);
-	
+			return Response.status(Response.Status.OK).entity("Rol eliminado..").build();
+
 		} catch (RolPersonajeExceptions e) {
-			// TODO: handle exception
-			logger.error("Se ha capturado la excepcion y la informacion es: Codigo: "+e.getCodigo()+" mensaje: "+e.getMensaje());
+			logger.error("Se ha capturado la excepcion y la informacion es: Codigo: " + e.getCodigo() + " mensaje: "
+					+ e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
 	}
 }
