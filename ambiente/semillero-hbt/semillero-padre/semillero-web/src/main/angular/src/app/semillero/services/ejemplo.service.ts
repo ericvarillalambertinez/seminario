@@ -28,6 +28,19 @@ export class EjemploService extends AbstractService {
   }
 
   public crearComic(comicDTO : ComicDTO): Observable<any> {
-    return this.httpClient.post('http://localhost:8085/semillero-servicios/rest/GestionarComic/crear',comicDTO);
+    return this.httpClient.post('http://localhost:8085/semillero-servicios/rest/GestionarComic/crearComic',comicDTO);
   }
+
+
+  public eliminarComic(idComic : any): Observable<any> {
+    console.log(idComic);
+    return this.httpClient.post(`http://localhost:8085/semillero-servicios/rest/GestionarComic/eliminarComic?idComic=${parseInt(idComic,10)}`,null);
+    
+  }
+
+  public modificarComic(comicDTO : any): Observable<any> {
+    return this.httpClient.post('http://localhost:8085/semillero-servicios/rest/GestionarComic/modificarComic',comicDTO);
+  }
+
+
 }

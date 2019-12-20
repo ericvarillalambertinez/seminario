@@ -1,0 +1,28 @@
+create table compra (
+  ca_id number(10) not null,
+  ca_perso number(20) not null,
+  ca_lcomic number(20) not null,
+  ca_fechaventa DATE,
+  constraint "PK_ca_id" PRIMARY KEY (ca_id)
+);
+
+comment on column COMPRA.CA_ID is 'Identificador de la compra';
+comment on column COMPRA.CA_PERSO  is 'identificador de la persona';
+comment on column COMPRA.CA_LCOMIC  is 'identificador del comic';
+comment on column COMPRA.CA_FECHAVENTA  is 'Fecha de venta del comic';
+
+ALTER TABLE compra
+ADD CONSTRAINT "FK_CA_LCOMIC"
+   FOREIGN KEY (ca_lcomic)
+   REFERENCES comic (SCID);
+ ALTER TABLE compra  
+ADD CONSTRAINT "FK_CA_PERSO"
+   FOREIGN KEY (ca_perso)
+   REFERENCES personaje (PERS_ID);
+
+ 
+
+
+--Crear una secuencia para utilizarla como incremento del identificador
+create sequence "SEC_CA" minvalue 1 start with 1 increment by 1;
+COMMIT;

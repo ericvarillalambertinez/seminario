@@ -6,6 +6,7 @@ import javax.ejb.Local;
 
 import com.hbt.semillero.Exceptions.ComicExceptions;
 import com.hbt.semillero.dto.ComicDTO;
+import com.hbt.semillero.dto.ConsultaTotalpersonajesComicDTO;
 
 /**
  * Expone los métodos del EJB GestionarComic Las interfaces determinan una
@@ -67,5 +68,15 @@ public interface IGestionarComicLocal {
 	 */
 	public List<ComicDTO> consultarComics() throws ComicExceptions;
 	
-	public List<ComicDTO> consultarComicsPrecio() throws ComicExceptions ;
+	/**
+	 * Metodo encargado de mostrar en consola el procesamiento de los precios del comic
+	 * */
+	public List<ComicDTO> consultarComicsPrecio() throws ComicExceptions;
+	
+	
+	/**
+	 * Metodo encargado de retornar el total de comic que estan en un personaje
+	 * */
+	public List<ConsultaTotalpersonajesComicDTO> consultarPersonajesComic() throws ComicExceptions;
+	public List<ConsultaTotalpersonajesComicDTO> consultarComicVendidos() throws ComicExceptions;
 }

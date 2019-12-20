@@ -1,7 +1,15 @@
 package com.hbt.semillero.Exceptions;
 
+
 public class RolPersonajeExceptions extends Exception {
 
+	/**
+	 * 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String mensaje;
 

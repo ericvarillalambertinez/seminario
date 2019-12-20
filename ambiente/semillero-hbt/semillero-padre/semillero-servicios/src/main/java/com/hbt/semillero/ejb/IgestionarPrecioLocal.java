@@ -1,7 +1,5 @@
 package com.hbt.semillero.ejb;
 
-import java.math.BigDecimal;
-
 import javax.ejb.Local;
 
 @FunctionalInterface

@@ -1,6 +1,11 @@
 <div class="container">
     <form [formGroup]="gestionarComicForm">
         <h1>Gestionar Comic</h1>
+        <br>
+        <div class="alert alert-greend" role="alert" *ngIf="banderaMensaje">
+            <strong>{{ mensajeExito}} ... </strong>
+        </div>
+       
         <hr>
 
         <div class="row">
@@ -112,13 +117,13 @@
                         <tr *ngFor="let comic of listaComics;let i=index;">
                             <th scope="row">{{comic.id}}</th>
                             <td>{{comic.nombre | uppercase }}</td>
-                            <td>{{comic.tematica | lowercase }}</td>
+                            <td>{{comic.tematicaEnum | uppercase }}</td>
                             <td>{{comic.precio | number: '.2'}}</td>
                             <td>{{comic.color ? 'Si' : 'No' }}</td>
                             <td>
                                 <i class="fas fa-search 2x ml-1" [routerLink]="['/consultar',comic]" title="Consultar"></i>
                                 <i class="fas fa-pencil-alt 2x ml-1" (click)="editarComic(i)" title="Editar"></i>
-                                <i class="far fa-times-circle 2x ml-1" (click)="eliminarComic(i)" title="Eliminar"></i>
+                                <i class="far fa-times-circle 2x ml-1" (click)="eliminarComic(comic)" title="Eliminar"></i>
                             </td>
                         </tr>
                     </tbody>

@@ -2,6 +2,10 @@ package com.hbt.semillero.Exceptions;
 
 public class PersonajeExceptions extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String mensaje;
 
@@ -11,7 +15,7 @@ public class PersonajeExceptions extends Exception {
 		this.mensaje = mensaje;
 	}
 
-	public PersonajeExceptions(String string, String string2) {
+	public PersonajeExceptions(String codigo, String mensaje) {
 		super();
 		this.codigo = codigo;
 		this.mensaje = mensaje;

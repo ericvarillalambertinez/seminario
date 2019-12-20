@@ -1,12 +1,5 @@
 package com.hbt.semillero.ejb;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ejb.Stateless;
-
-
 /**
  * <b>Descripción:<b> Clase que determina el bean para realizar las gestion de
  * los precio de los comics

@@ -28,6 +28,7 @@ public class RolPersonaje {
 	 * array de bytes.
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private Long id;
 	private String nombre;
 	private EstadoEnum estado;

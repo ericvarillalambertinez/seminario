@@ -23,7 +23,7 @@ export class ComicDTO {
     /**
     * Indicador de resultado.
     */
-    public tematica: string;
+    public tematicaEnum: string;
 
     /**
     * Indicador de resultado.

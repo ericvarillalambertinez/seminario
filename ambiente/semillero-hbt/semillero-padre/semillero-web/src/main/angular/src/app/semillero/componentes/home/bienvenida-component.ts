@@ -28,9 +28,9 @@ export class BienvenidaComponent implements OnInit {
     
     console.log("Parametros recibidos " + data.nombre);
 
-    this.ejemploService.consultarComics().subscribe(respuesta => {
-      console.log(respuesta);
-    });
+    // this.ejemploService.consultarComics().subscribe(respuesta => {
+    //   console.log(respuesta);
+    // });
 
 
     this.comicDTO = new ComicDTO();    
@@ -47,9 +47,9 @@ export class BienvenidaComponent implements OnInit {
     this.comicDTO.color = true;
 
     
-    this.ejemploService.crearComic(this.comicDTO).subscribe(respuesta => {
-      console.log(respuesta);
-    });
+    // this.ejemploService.crearComic(this.comicDTO).subscribe(respuesta => {
+    //   console.log(respuesta);
+    // });
 
    
   }

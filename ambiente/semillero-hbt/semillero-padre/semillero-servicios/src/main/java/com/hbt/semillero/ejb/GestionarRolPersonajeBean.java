@@ -14,14 +14,8 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
-import com.hbt.semillero.Exceptions.ComicExceptions;
-import com.hbt.semillero.Exceptions.PersonajeExceptions;
 import com.hbt.semillero.Exceptions.RolPersonajeExceptions;
-import com.hbt.semillero.dto.ComicDTO;
-import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.dto.RolPersonajeDTO;
-import com.hbt.semillero.entidad.Comic;
-import com.hbt.semillero.entidad.Personaje;
 import com.hbt.semillero.entidad.RolPersonaje;
 
 /**
@@ -126,7 +120,6 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal {
 	 * 
 	 * @param idRol
 	 */
-	@SuppressWarnings("unchecked")
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public RolPersonajeDTO consultarRolPersonaje(String id) throws RolPersonajeExceptions {
 		logger.debug("Se ejecuta el metodo consultar RolPersonajes");
